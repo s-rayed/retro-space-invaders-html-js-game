@@ -74,12 +74,16 @@
       }
       if (game.keys[37] || game.keys[65]){
         // clearing here could be done in render when player is drawn. but cant figure out the bug when that is done. --- get back to it.
-        game.contextPlayer.clearRect(game.player.x, game.player.y, game.player.width, game.player.height);
-        game.player.x -= game.player.speed;
+        if (game.player.x > 0){
+          game.contextPlayer.clearRect(game.player.x, game.player.y, game.player.width, game.player.height);
+          game.player.x -= game.player.speed;      
+        }
       }
       if (game.keys[39] || game.keys[68]){
-        game.contextPlayer.clearRect(game.player.x, game.player.y, game.player.width, game.player.height);
-        game.player.x += game.player.speed;  
+        if (game.player.x <= game.width - game.player.width){
+          game.contextPlayer.clearRect(game.player.x, game.player.y, game.player.width, game.player.height);
+          game.player.x += game.player.speed;        
+        }
       }
     }
 
