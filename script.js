@@ -10,6 +10,7 @@
     game.images = [];
 
     game.enemies = [];
+    game.projectiles = [];
 
     game.doneImages = 0;
     game.requiredImages = 0;
@@ -20,6 +21,9 @@
     game.left = false;
     game.enemySpeed = 1;
     // ----------------------------------------------------------------------------
+
+    game.fullShootTimer = 10;
+    game.shootTimer = game.fullShootTimer;
 
     game.player = {
       x: game.width / 2 - 50,
@@ -93,12 +97,25 @@
     //   space: 32 
     // }
 
+    function addBullet() {
+      game.projectiles.push({
+        x: game.player.x,
+        y: game.player.y,
+        size: 20,
+        image: 2
+      });
+    }
+
     function update() {
       addStars(1);
       game.count++;
+      if (game.shootTimer > 0) {
+        game.shootTimer--;
+      }
+
       for (i in game.stars){
         if (game.stars[i].y <= -5){
-          game.stars.splice(i, 1)
+          game.stars.splice(i, 1);
         }
         game.stars[i].y--;
       }
@@ -127,6 +144,13 @@
           game.enemies[i].x += game.enemySpeed;
         }  
       }
+      for (i in game.projectiles){
+        game.projectiles[i].y--;
+      }
+      if (game.keys[32]){
+        addBullet();
+        game.shootTimer = game.fullShootTimer;
+      }
       
     }
 
@@ -146,6 +170,11 @@
         var enemy = game.enemies[i];
         game.contextEnemies.clearRect(enemy.x, enemy.y, enemy.width, enemy.height);
         game.contextEnemies.drawImage(game.images[enemy.image], enemy.x, enemy.y, enemy.width, enemy.height);
+      }
+      for (i in game.projectiles){
+        var proj = game.projectiles[i];
+        game.contextEnemies.clearRect(proj.x, proj.y, proj.size, proj.size);
+        game.contextEnemies.drawImage(game.images[proj.image], proj.x, proj.y, proj.size, proj.size);
       }
       
     }
