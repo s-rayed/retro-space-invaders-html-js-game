@@ -1,6 +1,7 @@
 (function(){
   $(document).ready(function() {
     var game = {};
+    game.keys = [];
 
     game.width = 550;
     game.height = 600;
@@ -12,6 +13,22 @@
     game.images = [];
     game.doneImages = 0;
     game.requiredImages = 0;
+
+    game.player = {
+      x: game.width / 2 - 50,
+      y: game.height - 40,
+      width: 50,
+      height: 30,
+      speed: 3
+    };
+
+    $(document).keydown(function(e) {
+      game.keys[e.keyCode ? e.keyCode : e.which] = true;
+    });
+
+    $(document).keyup(function(e) {
+      delete game.keys[e.keyCode ? e.keyCode : e.which];
+    });
 
 
     function init() {
@@ -35,6 +52,18 @@
       }
     }
 
+    // keys: {
+    //   left: 37,
+    //   up: 38,
+    //   right: 39,
+    //   down: 40,
+    //   a: 65,
+    //   w: 87,
+    //   d: 68,
+    //   s: 83,
+    //   space: 32 
+    // }
+
     function update() {
       addStars(1);
       for (i in game.stars){
@@ -42,6 +71,15 @@
           game.stars.splice(i, 1)
         }
         game.stars[i].y--;
+      }
+      if (game.keys[37] || game.keys[65]){
+        // clearing here could be done in render when player is drawn. but cant figure out the bug when that is done. --- get back to it.
+        game.contextPlayer.clearRect(game.player.x, game.player.y, game.player.width, game.player.height);
+        game.player.x -= game.player.speed;
+      }
+      if (game.keys[39] || game.keys[68]){
+        game.contextPlayer.clearRect(game.player.x, game.player.y, game.player.width, game.player.height);
+        game.player.x += game.player.speed;  
       }
     }
 
@@ -52,6 +90,7 @@
         var star = game.stars[i];
         game.contextBackground.fillRect(star.x, star.y, star.size, star.size)
       }
+      game.contextPlayer.drawImage(game.images[0], game.player.x, game.player.y, game.player.width, game.player.height);
     }
 
     function loop() {
@@ -85,8 +124,10 @@
     }
 
     game.contextBackground.font = "bold 50px monaco";
+    game.contextBackground.fillStyle = "white";
+    game.contextBackground.fillText("Loading...", game.width / 2 - 100, game.height / 2 - 25)
     initImages(["img/ship.png", "img/enemy.png", "img/bullet.png"]);
-
+    checkImages();
     init();
   });
 
