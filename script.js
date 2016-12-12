@@ -40,7 +40,7 @@
 
     game.explodeSound = new Audio("sounds/invaderkilled.wav");
     game.shootSound = new Audio("sounds/shoot.wav");
-    game.
+    game.themeSong = new Audio("sounds/spaceInvadersDubstepRemix.mp3");
 
     game.contextBackground = document.getElementById("backgroundCanvas").getContext("2d");
     game.contextPlayer = document.getElementById("playerCanvas").getContext("2d");
@@ -85,7 +85,7 @@
       loop();
       setTimeout(function(){
         game.moving = true;
-      }, 1000)
+      }, 4000)
     }
 
     function addStars(num){
@@ -139,6 +139,7 @@
       if ((game.keys[32] && game.shootTimer == 10) && !game.gameOver && !game.gameWon){
         game.shootTimer--;
         addBullet();
+        game.shootSound.play();
         setTimeout(function(){
           game.shootTimer = 10;
         }, 300)
@@ -172,6 +173,7 @@
           if (collision(game.enemies[m], game.projectiles[p])){
             game.enemies[m].dead = true;
             game.enemies[m].image = 3;
+            game.explodeSound.play();
             game.contextEnemies.clearRect(game.projectiles[p].x, game.projectiles[p].y, game.projectiles[p].width + 10, game.projectiles[p].height + 10);
             game.projectiles.splice(p, 1);
           }
@@ -259,6 +261,7 @@
     function checkImages(){
       if (game.doneImages >= game.requiredImages){
         init();
+        game.themeSong.play();
       } else {
         setTimeout(function() {
           checkImages();
@@ -278,7 +281,11 @@
     game.contextBackground.fillText("Loading...", game.width / 2 - 100, game.height / 2 - 25)
     initImages(["img/ship.png", "img/enemy.png", "img/bullet.png", "img/explosion.png"]);
     checkImages();
-    // init();
+    
+    $("#playAgainButton").on("click", function(){
+      location.reload();
+    })
+
   });
 
 })();

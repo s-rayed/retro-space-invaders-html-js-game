@@ -1,7 +1,10 @@
+body{
+  background: black;
+}
 canvas {
   position: absolute;
-  top: 0px;
-  left: 0px;
+  top: 17%;
+  left: 35%;
   background: transparent;
 }
 
