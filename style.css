@@ -13,7 +13,6 @@ canvas {
 }
 
 #playAgainButton {
-  position: absolute;
-  top: 85%;
+  position: relative;
   left: 48%;
 }
