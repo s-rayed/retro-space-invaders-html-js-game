@@ -22,8 +22,7 @@
     game.enemySpeed = 1;
     // ----------------------------------------------------------------------------
 
-    game.fullShootTimer = 10;
-    game.shootTimer = game.fullShootTimer;
+    game.shootTimer = 10;
 
     game.player = {
       x: game.width / 2 - 50,
@@ -85,23 +84,12 @@
       }
     }
 
-    // keys: {
-    //   left: 37,
-    //   up: 38,
-    //   right: 39,
-    //   down: 40,
-    //   a: 65,
-    //   w: 87,
-    //   d: 68,
-    //   s: 83,
-    //   space: 32 
-    // }
-
     function addBullet() {
       game.projectiles.push({
         x: game.player.x,
         y: game.player.y,
-        size: 20,
+        width: 10,
+        height: 30,
         image: 2
       });
     }
@@ -109,15 +97,12 @@
     function update() {
       addStars(1);
       game.count++;
-      if (game.shootTimer > 0) {
-        game.shootTimer--;
-      }
-
+      // if(game.shootTimer > 0)game.shootTimer--;
       for (i in game.stars){
+        game.stars[i].y--;
         if (game.stars[i].y <= -5){
           game.stars.splice(i, 1);
         }
-        game.stars[i].y--;
       }
       if (game.keys[37] || game.keys[65]){
         // clearing here could be done in render when player is drawn. but cant figure out the bug when that is done. --- get back to it.
@@ -145,11 +130,19 @@
         }  
       }
       for (i in game.projectiles){
-        game.projectiles[i].y--;
+        game.projectiles[i].y -= 2;
+        if(game.projectiles[i].y <= -20){
+          game.projectiles.splice(i, 1)
+        }
       }
-      if (game.keys[32]){
+
+
+      if (game.keys[32] && game.shootTimer == 10){
+        game.shootTimer--;
         addBullet();
-        game.shootTimer = game.fullShootTimer;
+        setTimeout(function(){
+          game.shootTimer = 10;
+        }, 300)
       }
       
     }
@@ -173,8 +166,9 @@
       }
       for (i in game.projectiles){
         var proj = game.projectiles[i];
-        game.contextEnemies.clearRect(proj.x, proj.y, proj.size, proj.size);
-        game.contextEnemies.drawImage(game.images[proj.image], proj.x, proj.y, proj.size, proj.size);
+        game.contextEnemies.clearRect(proj.x, proj.y, proj.width, proj.height+10);
+        // game.contextEnemies.width = game.contextEnemies.width;
+        game.contextEnemies.drawImage(game.images[proj.image], proj.x, proj.y, proj.width, proj.height);
       }
       
     }
